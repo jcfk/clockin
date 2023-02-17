@@ -22,7 +22,7 @@ LIST_COUNT=10 # no of events to display
 TIME=""
 EVENT=""
 COMMAND="clockin"
-DATE_FMT="+%a %D %T"
+DATE_FMT="+%a %D %p %I:%M"
 
 LAST_EVENT_TIME=$(date --date="@$(tail -n1 "$DB_FILE" | cut -d">" -f1)" "+%s")
 LAST_EVENT_NAME="$(tail -n1 "$DB_FILE" | cut -d">" -f2 | cut -c 2-)"
@@ -108,8 +108,11 @@ case "$COMMAND" in
         echo "Ended \"$LAST_EVENT_NAME\" at $(date --date="@$TIME" "$DATE_FMT")."
     ;;
     "ls")
+        EVENT_LINES="$(tail -n$LIST_COUNT "$DB_FILE")"
+        MAX_LEN_NAME=$(echo "$EVENT_LINES" | cut -d">" -f2 | cut -c 2- | wc -L)
+
         LAST_TIME=""
-        for LINE in $(tail -n$LIST_COUNT "$DB_FILE") ; do
+        for LINE in $EVENT_LINES ; do
             EVENT_TIME="$(echo "$LINE" | cut -d">" -f1)"
             EVENT_NAME="$(echo "$LINE" | cut -d">" -f2 | cut -c 2-)"
 
@@ -117,11 +120,12 @@ case "$COMMAND" in
                 TIME_DIFF=$(expr $EVENT_TIME - $LAST_TIME)
                 TIME_DIFF_H=$(expr $TIME_DIFF / 3600)
                 TIME_DIFF_M=$(expr \( $TIME_DIFF % 3600 \) / 60)
-                echo " (+${TIME_DIFF_H}h${TIME_DIFF_M}m)"
+                printf " (+%dh%02dm)\n" $TIME_DIFF_H $TIME_DIFF_M
             fi
 
             if [[ "$EVENT_NAME" ]] ; then
-                printf "$(date --date="@$EVENT_TIME" "$DATE_FMT") $EVENT_NAME"
+                printf "$(date --date="@$EVENT_TIME" "$DATE_FMT")"
+                printf "  %-${MAX_LEN_NAME}s" "$EVENT_NAME"
             fi
             LAST_TIME=$EVENT_TIME
         done
