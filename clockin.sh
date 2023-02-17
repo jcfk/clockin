@@ -1,10 +1,10 @@
 #!/bin/bash
 
 HELP="USAGE:
-  clockin [OPTIONS...] _event_  - Log an event
-  clockin end [OPTIONS...]      - End the current event
-  clockin ls [OPTIONS...]       - List events
-  clockin vi [OPTIONS...]       - Open DB_FILE in editor
+  clockin     [OPTIONS...] _event_  - Log an event
+  clockin end [OPTIONS...]          - End the current event
+  clockin ls  [OPTIONS...]          - List events
+  clockin vi  [OPTIONS...]          - Open DB_FILE in editor
 
 OPTIONS:
   --time _time_  - Specify time in GNU date format
@@ -57,8 +57,7 @@ while [[ "${1:0:1}" == "-" ]] ; do
             shift
         ;;
         "--help")
-            echo "$HELP"
-            exit 0
+            echo "$HELP" ; exit 0
         ;;
         *)
             err "unknown option \"$1\""
