@@ -22,6 +22,7 @@ LIST_COUNT=10 # no of events to display
 TIME=""
 EVENT=""
 COMMAND="clockin"
+DATE_FMT="+%a %D %T"
 
 LAST_EVENT_TIME=$(date --date="@$(tail -n1 "$DB_FILE" | cut -d">" -f1)" "+%s")
 LAST_EVENT_NAME="$(tail -n1 "$DB_FILE" | cut -d">" -f2 | cut -c 2-)"
@@ -100,11 +101,11 @@ esac
 case "$COMMAND" in
     "clockin")
         echo "$TIME> $EVENT" >> "$DB_FILE"
-        echo "Logged \"$EVENT\" at $(date --date="@$TIME" "+%a %D %T")."
+        echo "Logged \"$EVENT\" at $(date --date="@$TIME" "$DATE_FMT")."
     ;;
     "end")
         echo "$TIME>" >> "$DB_FILE"
-        echo "Ended \"$LAST_EVENT_NAME\" at $(date --date="@$TIME" "+%a %D %T")."
+        echo "Ended \"$LAST_EVENT_NAME\" at $(date --date="@$TIME" "$DATE_FMT")."
     ;;
     "ls")
         LAST_TIME=""
@@ -120,7 +121,7 @@ case "$COMMAND" in
             fi
 
             if [[ "$EVENT_NAME" ]] ; then
-                printf "$(date --date="@$EVENT_TIME" "+%a %D %T")  $EVENT_NAME"
+                printf "$(date --date="@$EVENT_TIME" "$DATE_FMT") $EVENT_NAME"
             fi
             LAST_TIME=$EVENT_TIME
         done
