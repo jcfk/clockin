@@ -124,7 +124,7 @@ case "$COMMAND" in
 
             if [[ "$EVENT_NAME" ]] ; then
                 printf "$(date --date="@$EVENT_TIME" "$DATE_FMT")"
-                printf "  %-${MAX_LEN_NAME}s" "$EVENT_NAME"
+                printf " | %-${MAX_LEN_NAME}s" "$EVENT_NAME"
             fi
             LAST_TIME=$EVENT_TIME
         done
