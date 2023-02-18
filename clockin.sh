@@ -48,6 +48,9 @@ while [[ "${1:0:1}" == "-" ]] ; do
                 err "option (--time) takes an argument"
             fi
             TIME=$(date --date="$2" "+%s")
+            if [[ $? -ne 0 ]] ; then
+                err "option (--time) badly formed"
+            fi
             if [[ "$TIME" -gt "$CURRENT_TIME" ]] ; then
                 err "option (--time) cannot be in the future"
             fi
