@@ -122,7 +122,7 @@ case "$COMMAND" in
                 TIME_DIFF=$(expr $EVENT_TIME - $LAST_TIME)
                 TIME_DIFF_H=$(expr $TIME_DIFF / 3600)
                 TIME_DIFF_M=$(expr \( $TIME_DIFF % 3600 \) / 60)
-                printf " (+%dh%02dm)\n" $TIME_DIFF_H $TIME_DIFF_M
+                printf "  (+%dh%02dm)\n" $TIME_DIFF_H $TIME_DIFF_M
             fi
 
             if [[ "$EVENT_NAME" ]] ; then
