@@ -8,6 +8,7 @@ HELP="USAGE:
 
 OPTIONS:
   --time _time_  - Specify time in GNU date format
+  --count _num_  - List this many events
   --help         - Print this message"
 
 err() {
