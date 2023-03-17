@@ -59,6 +59,16 @@ while [[ "${1:0:1}" == "-" ]] ; do
             fi
             shift
         ;;
+        "--count")
+            if [[ -z "$2" ]] ; then
+                err "option (--count) takes an argument"
+            fi
+            if [[ "$2" -ne "$2" ]] ; then
+                err "option (--count) must be a positive integer"
+            fi
+            LIST_COUNT="$2"
+            shift
+        ;;
         "--help")
             echo "$HELP" ; exit 0
         ;;
