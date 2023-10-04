@@ -18,7 +18,7 @@ err() {
 IFS="
 "
 
-DB_FILE="$MY_SYNC/corpus/dump/clockin"
+DB_FILE="$MY_SYNC/corpus/system/logs/clockin"
 LIST_COUNT=10 # no of events to display
 TIME=""
 EVENT=""
@@ -148,5 +148,4 @@ case "$COMMAND" in
         $EDITOR "$DB_FILE"
     ;;
 esac
-
 
