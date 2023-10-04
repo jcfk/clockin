@@ -25,7 +25,8 @@ EVENT=""
 COMMAND="clockin"
 DATE_FMT="+%a %D %p %I:%M"
 
-LAST_EVENT_TIME=$(date --date="@$(tail -n1 "$DB_FILE" | cut -d">" -f1)" "+%s")
+LAST_EVENT_TIME=$(tail -n1 "$DB_FILE" | cut -d">" -f1)
+LAST_EVENT_TIME=${LAST_EVENT_TIME:-0}
 LAST_EVENT_NAME="$(tail -n1 "$DB_FILE" | cut -d">" -f2 | cut -c 2-)"
 CURRENT_TIME=$(date "+%s")
 EDITOR="${EDITOR:-vi}"
@@ -118,7 +119,9 @@ case "$COMMAND" in
     ;;
     "end")
         echo "$TIME>" >> "$DB_FILE"
-        echo "Ended \"$LAST_EVENT_NAME\" at $(date --date="@$TIME" "$DATE_FMT")."
+        if [[ $LAST_EVENT_NAME ]] ; then
+            echo "Ended \"$LAST_EVENT_NAME\" at $(date --date="@$TIME" "$DATE_FMT")."
+        fi
     ;;
     "ls")
         EVENT_LINES="$(tail -n$LIST_COUNT "$DB_FILE")"
