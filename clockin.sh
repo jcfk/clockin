@@ -9,10 +9,17 @@ HELP="USAGE:
 OPTIONS:
   --time _time_  - Specify time in GNU date format
   --count _num_  - List this many events
-  --help         - Print this message"
+  --help         - Print this message
+
+DB_FILE:
+  Empty lines and lines beginning with '#' are ignored."
 
 err() {
     echo "$1" ; exit 1
+}
+
+db_file () {
+    grep -Ev '^(#.*|\s*$)' "$DB_FILE"
 }
 
 IFS="
@@ -25,9 +32,9 @@ EVENT=""
 COMMAND="clockin"
 DATE_FMT="+%a %D %p %I:%M"
 
-LAST_EVENT_TIME=$(tail -n1 "$DB_FILE" | cut -d">" -f1)
+LAST_EVENT_TIME=$(db_file | tail -n1 | cut -d">" -f1)
 LAST_EVENT_TIME=${LAST_EVENT_TIME:-0}
-LAST_EVENT_NAME="$(tail -n1 "$DB_FILE" | cut -d">" -f2 | cut -c 2-)"
+LAST_EVENT_NAME="$(db_file | tail -n1 | cut -d">" -f2 | cut -c 2-)"
 CURRENT_TIME=$(date "+%s")
 EDITOR="${EDITOR:-vi}"
 
@@ -124,7 +131,7 @@ case "$COMMAND" in
         fi
     ;;
     "ls")
-        EVENT_LINES="$(tail -n$LIST_COUNT "$DB_FILE")"
+        EVENT_LINES="$(db_file | tail -n$LIST_COUNT)"
         MAX_LEN_NAME=$(echo "$EVENT_LINES" | cut -d">" -f2 | cut -c 2- | wc -L)
 
         LAST_TIME=""
