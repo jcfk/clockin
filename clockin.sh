@@ -7,12 +7,16 @@ HELP="USAGE:
   clockin vi  [OPTIONS...]          - Open DB_FILE in editor
 
 OPTIONS:
-  --time _time_  - Specify time in GNU date format
-  --count _num_  - List this many events
-  --help         - Print this message
+  --db-file _file_  - Specify plaintext database file
+  --time _time_     - Specify time in GNU date format
+  --count _num_     - List this many events
+  --help            - Print this message
 
 DB_FILE:
-  Empty lines and lines beginning with '#' are ignored."
+  This is the file that contains the data. It can be manually edited. Empty
+  lines and lines beginning with '#' are ignored.
+
+  Specify a path with envvar \$CLOCKIN_DB_FILE or override with --db-file."
 
 err() {
     echo "$1" ; exit 1
@@ -22,10 +26,9 @@ db_file () {
     grep -Ev '^(#.*|\s*$)' "$DB_FILE"
 }
 
-IFS="
-"
+IFS=$'\n'
 
-DB_FILE="$MY_SYNC/corpus/system/logs/clockin"
+DB_FILE="$CLOCKIN_DB_FILE"
 LIST_COUNT=10 # no of events to display
 TIME=""
 EVENT=""
@@ -52,6 +55,10 @@ fi
 # 2. Options
 while [[ "${1:0:1}" == "-" ]] ; do
     case "$1" in
+        "--db-file")
+            DB_FILE="$2"
+            shift
+        ;;
         "--time")
             if [[ -z "$2" ]] ; then
                 err "option (--time) takes an argument"
@@ -87,6 +94,10 @@ while [[ "${1:0:1}" == "-" ]] ; do
     esac
     shift
 done
+
+if [[ -z "$DB_FILE" ]] ; then
+    err "DB_FILE must be given"
+fi
 
 if [[ -z "$TIME" ]] ; then
     TIME="$CURRENT_TIME"
